@@ -1,9 +1,10 @@
 import pygame
 
-size = 24
+size = 50
+speed = 50
 
 pygame.init()
-pygame.display.set_caption("Sporesdale Bioraiders")
+pygame.display.set_caption("Cellular Tomato :)")
 windowSize = 600
 boxSize = int(windowSize/(size-1))
 screen = pygame.display.set_mode((windowSize, windowSize))
@@ -13,7 +14,14 @@ running = True
 def getNextStep(lifeGrid):
     a, b = size, size
 
-    directions = [(0, 1), (1, 0), (0, -1), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]
+    #can have 4 or 8 neighbors
+    directions8 = [(0, 1), (1, 0), (0, -1), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]
+    directions4 = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+
+    #rules for cellular automata.
+    bornNbrs = [3]
+    surviveNbrs = [2, 3]
+    directions = directions8
 
     for i in range(a):
         for j in range(b):
@@ -26,10 +34,10 @@ def getNextStep(lifeGrid):
                     liveNbrs += 1
 
 
-            if lifeGrid[i][j] == 0 and liveNbrs == 3:
+            if lifeGrid[i][j] == 0 and liveNbrs in bornNbrs:
                 lifeGrid[i][j] = 2
 
-            elif lifeGrid[i][j] == 1 and (liveNbrs < 2 or liveNbrs > 3):
+            elif (lifeGrid[i][j] == 1) and not(liveNbrs in surviveNbrs):
                 lifeGrid[i][j] = -1
                 
             
@@ -40,11 +48,11 @@ def getNextStep(lifeGrid):
                 lifeGrid[i][j] = 1
 
             elif lifeGrid[i][j] == -1:
-                #pygame.draw.rect(screen, pygame.Color(255, 0, 0, 255), ((j)*boxSize, (i)*boxSize, boxSize, boxSize), border_radius=0)
+                pygame.draw.rect(screen, pygame.Color(255, 0, 0, 255), ((j)*boxSize, (i)*boxSize, boxSize, boxSize), border_radius=0)
                 lifeGrid[i][j] = 0
             #else:
                 #pygame.draw.rect(screen, pygame.Color(0, 255*int(lifeGrid[i][j]), 0, 255), ((j)*boxSize, (i)*boxSize, boxSize, boxSize), border_radius=0)        
-            pygame.draw.rect(screen, pygame.Color(0, 255*int(lifeGrid[i][j]), 0, 255), ((j)*boxSize, (i)*boxSize, boxSize, boxSize), border_radius=0)
+            pygame.draw.rect(screen, pygame.Color(5, 255*int(lifeGrid[i][j]), 5, 255), ((j)*boxSize, (i)*boxSize, boxSize, boxSize), border_radius=0)
             #print(lifeGrid[i][j], end=" ")
         #print()
 
@@ -77,7 +85,7 @@ while running:
 
     pygame.display.flip()
 
-    pygame.time.delay(200)
+    pygame.time.delay(speed)
 
     clock.tick(60)
 
