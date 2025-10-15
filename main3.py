@@ -1,9 +1,28 @@
 import pygame
 import random
 
-size = 50
-speed = 50
-start = " "
+size = 100
+speed = 10
+#type "random" to randomize
+start = "no"
+
+#common rulesets
+life = [[3], [2, 3]]
+highLife = [[3, 6], [2, 3]]
+dayNight = [[3, 6, 7, 8], [3, 4, 6, 7, 8]]
+
+#what is a neighbor?
+directions8 = [(0, 1), (1, 0), (0, -1), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]
+directions4 = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+directionsUp = [(0, 1), (1, 1), (-1, 1),(0, -1)]
+
+#rules for cellular automata
+
+#you should make directions part of the rules or add more states
+directions = directionsUp
+rules = [[1],[1]]
+#rules = life
+
 
 pygame.init()
 pygame.display.set_caption("Cellular Tomato :)")
@@ -16,21 +35,6 @@ running = True
 def getNextStep(lifeGrid):
     a, b = size, size
 
-    #can have 4 or 8 neighbors. 
-    directions8 = [(0, 1), (1, 0), (0, -1), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]
-    directions4 = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-    directionsUp = [(0, 1), (1, 1), (-1, 1),(0, -1)]
-
-    #rules for cellular automata.
-    
-    bornNbrs = [2]
-    surviveNbrs = [2, 3]
-    '''
-    bornNbrs = [3, 6, 7, 8]
-    surviveNbrs = [3, 4, 6, 7, 8]
-    '''
-    directions = directions8
-
     for i in range(a):
         for j in range(b):
             liveNbrs = 0
@@ -42,10 +46,10 @@ def getNextStep(lifeGrid):
                     liveNbrs += 1
 
 
-            if lifeGrid[i][j] == 0 and liveNbrs in bornNbrs:
+            if lifeGrid[i][j] == 0 and liveNbrs in rules[0]:
                 lifeGrid[i][j] = "growing"
 
-            elif (lifeGrid[i][j] == 1) and not(liveNbrs in surviveNbrs):
+            elif (lifeGrid[i][j] == 1) and not(liveNbrs in rules[1]):
                 lifeGrid[i][j] = "dying"
                 
             
@@ -76,14 +80,16 @@ for c in range(size):
     lifeGrid.append(die)
 
 
-#lifeGrid[1][1] = 1
 
-lifeGrid[42][42] = 1
-lifeGrid[43][43] = 1
-lifeGrid[43][44] = 1
-lifeGrid[42][44] = 1
-lifeGrid[41][44] = 1 
-
+#glider :)
+'''
+lifeGrid[2][2] = 1
+lifeGrid[3][3] = 1
+lifeGrid[3][4] = 1
+lifeGrid[2][4] = 1
+lifeGrid[1][4] = 1 
+'''
+lifeGrid[49][49] = 1
 
 while running:
     
