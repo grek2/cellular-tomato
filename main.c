@@ -2,61 +2,38 @@
 #include <stdlib.h>
 
 int boxSize = 25;
+int size = 13;
 int lifeArray[13][13];
-
 int checkCells();
 
-int** createGrid(int size1, int size2) {
-    int** matrix = (int**)malloc(size1 * sizeof(int*));
-
-    if (matrix == NULL) {
-        printf("what the frisk\n");
-        exit(1);
-    }
-
-    for (int i = 0; i < size1; i++) {  
-        matrix[i] = 0;   
-    }
-
-    return matrix;
-}
-
-void freeMatrix(int** matrix, int size) {
-    for (int i = 0; i < size; i++) {
-        free(matrix[i]);
-    }
-    free(matrix);
-}
 
 int main() {
-    int size = 13;
-    int** lifeArray = createGrid(size, size);
 
-    for (int i = 1; i < 13; i++) {
-        for (int j = 1; j < 13; j++){
+    for (int i = 1; i < size; i++) {
+        for (int j = 1; j < size; j++){
             lifeArray[j][i] = 0;
         }
     }
     //printf("grid cleared\n");
 
     //change stuff here
-    lifeArray[1][2] = 1;
-    lifeArray[2][1] = 1;
-    lifeArray[2][2] = 1;
+    lifeArray[5][5] = 1;
+    //lifeArray[2][1] = 1;
+    //lifeArray[2][2] = 1;
     //lifeArray[5][8] = 1;
-    //for (int s = 0; s < 4; s++) {
-        for (int i = 1; i < 13; i++) {
-            for (int j = 1; j < 13; j++){
+    for (int s = 0; s < 10; s++) {
+        for (int i = 1; i < size; i++) {
+            for (int j = 1; j < size; j++){
                 printf("%d", lifeArray[j][i]);
                 if (lifeArray[j][i] == 1) {
-                    if ((checkCells(i, j) > 3) || (checkCells(i, j) < 2)) {
+                    if ((checkCells(j, i) > 3) || (checkCells(j, i) < 2)) {
                         lifeArray[j][i] = -1;
                         //printf("\nthis cell is dying\n");
                         //printf("%d", checkCells());
                     }
                 }
                 if (lifeArray[j][i] == 0) {
-                    if (checkCells(i, j) == 3) {
+                    if (checkCells(j, i) == 3) {
                         lifeArray[j][i] = 2;
                         //printf("\nthis cell is growing\n");
                         //printf("%d", checkCells());
@@ -67,8 +44,8 @@ int main() {
             printf("\n");
         }
         printf("\n\n");
-        for (int i = 1; i < 13; i++) {
-            for (int j = 1; j < 13; j++){
+        for (int i = 1; i < size; i++) {
+            for (int j = 1; j < size; j++){
                 if (lifeArray[j][i] == -1) {
                     lifeArray[j][i] = 0;
                 }
@@ -79,8 +56,7 @@ int main() {
             }
     
         }
-    //}
-    freeMatrix(lifeArray, size);
+    }
 }
 
 int checkCells(int xCheck, int yCheck) {

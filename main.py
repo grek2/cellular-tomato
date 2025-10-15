@@ -80,16 +80,14 @@ while running:
     for x in range(0, 600, boxSize):
         for y in range(0, 600, boxSize):
             if int(lifeArray[int(x/boxSize)][int(y/boxSize)]) == -1:
-                #lifeArray[int(x/boxSize)][int(y/boxSize)] = 0
-                eeee = 0
+                lifeArray[int(x/boxSize)][int(y/boxSize)] = 0
+                #eeee = 0
 
             elif int(lifeArray[int(x/boxSize)][int(y/boxSize)]) == 2:
-                #lifeArray[int(x/boxSize)][int(y/boxSize)] = 1
-                eeee = 1
+                lifeArray[int(x/boxSize)][int(y/boxSize)] = 1
+                #eeee = 1
 
-            else:
-                #print("cell stays same", lifeArray[int(x/boxSize)][int(y/boxSize)])
-                eeee = 2
+           
                 
 
     
