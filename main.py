@@ -1,100 +1,197 @@
 import pygame
-import time
+import random
 
-# pygame setup
+size = 100
+speed = 1
+#type "random" to randomize
+start = "random"
+chance = 19
+
+#what is a neighbor?
+directions8 = [(0, 1), (1, 0), (0, -1), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]
+directions4 = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+directions6 = [(0, 1), (1, 0), (0, -1), (-1, 0), (1, -1), (-1, 1)]
+directions4r2 = [(0, 1), (1, 0), (0, -1), (-1, 0), (0, 2), (2, 0), (0, -2), (-2, 0)]
+directionsUp = [(0, 1), (1, 1), (-1, 1),(0, -1)]
+
+#interesting rulesets
+life = [[3], [2, 3]]
+highLife = [[3, 6], [2, 3]]
+dayNight = [[3, 6, 7, 8], [3, 4, 6, 7, 8]]
+seeds = [[2],[]]
+#this one has a lot of potential i think
+inkspot = [[3],[0,1,2,3,4,5,6,7,8]]
+blinkers = [[3,4,5],[2]]
+coral = [[3],[4,5,6,7,8]]
+twoByTwo = [[3,6],[1,2,5]]
+
+
+#rules for cellular automata
+rules = life
+rules.append(directions8)
+
+try:
+    rules[2]
+except IndexError:
+    rules.append(directions8)
+
 pygame.init()
-pygame.display.set_caption("Sporesdale Bioraiders")
+pygame.display.set_caption("Cellular Tomato :)")
 windowSize = 600
-boxSize = int(windowSize/24)
+boxSize = int(windowSize/(size-1))
 screen = pygame.display.set_mode((windowSize, windowSize))
 clock = pygame.time.Clock()
 running = True
-lifeArray = []
-x = 0
-y = 0
+
+def getNextStep(lifeGrid):
+    a, b = size, size
+
+    for i in range(a):
+        for j in range(b):
+            liveNbrs = 0
+
+            for dirX, dirY in rules[2]:
+                (x, y) = (i + dirX, j + dirY)
+
+                if 0 <= x < a and 0 <= y < b and (lifeGrid[x][y] == 1 or lifeGrid[x][y] == "dying"):
+                    liveNbrs += 1
 
 
-def checkCells():
-    naybors = 0 #i dont have time to spell shit correctly
-    for c in range(-1, 2, 1):
-        for d in range(-1, 2, 1):
-            if int(c) != 0 or int(d) != 0:
-                try:
-                    #i have no idea what is going on help me
-                        nayborsAdd = int(lifeArray[int(x/boxSize)+d][int(y/boxSize)+c])
-                        #print("yes", c, d)
-                        #print("Checking cell", lifeArray[int(x/boxSize)][int(y/boxSize)])
-                        #print(nayborsAdd)
-                        #print("coords: ", x/boxSize, y/boxSize)
-                except IndexError:
-                    check = 0
-                #print("Index error")
-            naybors += nayborsAdd
-    #print("Neighbors ", naybors)
-    return int(naybors)
-    
+            if lifeGrid[i][j] == 0 and liveNbrs in rules[0]:
+                lifeGrid[i][j] = "growing"
 
-for b in range(25):
-    lifeArray.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-    #lifeArray.append([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+            elif (lifeGrid[i][j] == 1) and not(liveNbrs in rules[1]):
+                lifeGrid[i][j] = "dying"
+                
+            
+    for i in range(a):
+        for j in range(b):            
+            if lifeGrid[i][j] == "growing":
+                #pygame.draw.rect(screen, pygame.Color(0, 0, 255, 255), ((j)*boxSize, (i)*boxSize, boxSize, boxSize), border_radius=0)
+                lifeGrid[i][j] = 1
 
-#lifeArray[0][0] = 1
-lifeArray[5][1] = 1
-lifeArray[6][0] = 1
-lifeArray[6][1] = 1
-lifeArray[7][2] = 1
+            elif lifeGrid[i][j] == "dying":
+                #pygame.draw.rect(screen, pygame.Color(255, 0, 0, 255), ((i)*boxSize, (j)*boxSize, boxSize, boxSize), border_radius=0)
+                lifeGrid[i][j] = 0
+            #else:
+                #pygame.draw.rect(screen, pygame.Color(0, 255*int(lifeGrid[i][j]), 0, 255), ((j)*boxSize, (i)*boxSize, boxSize, boxSize), border_radius=0)        
+            pygame.draw.rect(screen, pygame.Color(5, 255*int(lifeGrid[i][j]), 5, 255), ((i)*boxSize, (j)*boxSize, boxSize, boxSize), border_radius=0)
+            (x, y) = pygame.mouse.get_pos()
+            pygame.draw.rect(screen, pygame.Color(255, 255, 5, 255), (int((x/boxSize))*boxSize, int((y/boxSize))*boxSize, boxSize, boxSize), border_radius=0)
+            #if pygame.mouse.get_pressed(num_buttons=3) == True:
+            
+            #print(lifeGrid[i][j], end=" ")
+        #print()
 
 
+lifeGrid = []
+for c in range(size):
+    die = []
+    for d in range(size):
+        if start == "random":
+            something = int(random.randint(0, chance)/10)
+            die.append(something)
+        else:
+            die.append(0)
+    lifeGrid.append(die)
+
+
+
+#glider :)
+if start == "glider":
+    lifeGrid[2][2] = 1
+    lifeGrid[3][3] = 1
+    lifeGrid[3][4] = 1
+    lifeGrid[2][4] = 1
+    lifeGrid[1][4] = 1
+
+elif start == "inkspot":
+    lifeGrid[12][2] = 1
+    lifeGrid[12][3] = 1
+    lifeGrid[12][4] = 1
+    lifeGrid[11][7] = 1
+    lifeGrid[10][47] = 1
+
+elif start == "r":
+    f = int(size/2)
+    lifeGrid[f+2][f+2] = 1
+    lifeGrid[f+3][f+2] = 1
+    lifeGrid[f+2][f+3] = 1
+    lifeGrid[f+1][f+3] = 1
+    lifeGrid[f+2][f+4] = 1
+elif start == "glider gun":
+    #is there a more convenient way to do this? probably.
+    lifeGrid[ 5 ][ 29 ] = 1
+    lifeGrid[ 6 ][ 27 ] = 1
+    lifeGrid[ 6 ][ 29 ] = 1
+    lifeGrid[ 7 ][ 17 ] = 1
+    lifeGrid[ 7 ][ 18 ] = 1
+    lifeGrid[ 7 ][ 25 ] = 1
+    lifeGrid[ 7 ][ 26 ] = 1
+    lifeGrid[ 7 ][ 39 ] = 1
+    lifeGrid[ 7 ][ 40 ] = 1
+    lifeGrid[ 8 ][ 16 ] = 1
+    lifeGrid[ 8 ][ 20 ] = 1
+    lifeGrid[ 8 ][ 25 ] = 1
+    lifeGrid[ 8 ][ 26 ] = 1
+    lifeGrid[ 8 ][ 39 ] = 1
+    lifeGrid[ 8 ][ 40 ] = 1
+    lifeGrid[ 9 ][ 5 ] = 1
+    lifeGrid[ 9 ][ 6 ] = 1
+    lifeGrid[ 9 ][ 15 ] = 1
+    lifeGrid[ 9 ][ 21 ] = 1
+    lifeGrid[ 9 ][ 25 ] = 1
+    lifeGrid[ 9 ][ 26 ] = 1
+    lifeGrid[ 10 ][ 5 ] = 1
+    lifeGrid[ 10 ][ 6 ] = 1
+    lifeGrid[ 10 ][ 15 ] = 1
+    lifeGrid[ 10 ][ 19 ] = 1
+    lifeGrid[ 10 ][ 21 ] = 1
+    lifeGrid[ 10 ][ 22 ] = 1
+    lifeGrid[ 10 ][ 27 ] = 1
+    lifeGrid[ 10 ][ 29 ] = 1
+    lifeGrid[ 11 ][ 15 ] = 1
+    lifeGrid[ 11 ][ 21 ] = 1
+    lifeGrid[ 11 ][ 29 ] = 1
+    lifeGrid[ 12 ][ 16 ] = 1
+    lifeGrid[ 12 ][ 20 ] = 1
+    lifeGrid[ 13 ][ 17 ] = 1
+    lifeGrid[ 13 ][ 18 ] = 1
 
 while running:
+
+    pygame.mouse.set_visible(False)
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+    screen.fill("white")
 
-    # fill the screen with a color to wipe away anything from last frame
-    screen.fill("black")
-    
-    #lifeArray[0][23] = "blue"
+    getNextStep(lifeGrid)
 
-    # RENDER YOUR GAME HERE
-
-
-    for x in range(0, 600, boxSize):
-        for y in range(0, 600, boxSize):
-            #if lifeArray[int(x/boxSize)][int(y/boxSize)] != 0:
-                 #pygame.draw.rect(screen, pygame.Color(lifeArray[int(x/boxSize)][int(y/boxSize)]), (y, x, boxSize, boxSize), border_radius=0)
-            
-            if int(lifeArray[int(x/boxSize)][int(y/boxSize)]) == 1:
-                pygame.draw.rect(screen, pygame.Color(255, 0, 0, 255), (y, x, boxSize, boxSize), border_radius=0)
-                if checkCells() > 3 or checkCells() < 2:
-                    lifeArray[int(x/boxSize)][int(y/boxSize)] = 0 #-1
-                    print(lifeArray[int(x/boxSize)][int(y/boxSize)], " is dead")
-            else:
-                pygame.draw.rect(screen, pygame.Color(255, 255, 255, 255), (y, x, boxSize, boxSize), border_radius=0)
-                if checkCells() == 3:
-                    lifeArray[int(x/boxSize)][int(y/boxSize)] = 1 #2
-                    print(lifeArray[int(x/boxSize)][int(y/boxSize)], " is live")
-
-
-    for x in range(0, 600, boxSize):
-        for y in range(0, 600, boxSize):
-            if int(lifeArray[int(x/boxSize)][int(y/boxSize)]) == -1:
-                lifeArray[int(x/boxSize)][int(y/boxSize)] = 0
-                #eeee = 0
-
-            elif int(lifeArray[int(x/boxSize)][int(y/boxSize)]) == 2:
-                lifeArray[int(x/boxSize)][int(y/boxSize)] = 1
-                #eeee = 1
-
-           
-                
-
-    
     pygame.display.flip()
 
-    pygame.time.delay(500)
+    pygame.time.delay(speed)
 
     clock.tick(60)
 
 pygame.quit()
+
+
+'''
+    for i in range(size):
+        for j in range(size):
+            pygame.draw.rect(screen, pygame.Color(255, 255*int(lifeGrid[i][j]), 0, 255), ((j)*boxSize, (i)*boxSize, boxSize, boxSize), border_radius=6)
+'''
+
+
+
+
+
+
+
+
+
+
+            
+    
