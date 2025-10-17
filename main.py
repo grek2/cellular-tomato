@@ -36,6 +36,7 @@ story = [
 """The Bio Raiders' ultimate goal is to earn as many POINTS as possible by covering the BLUE ZONES with GREEN PIXELS and avoiding GREEN PIXELS in the RED ZONES at all costs.""",
 """They'll achieve this by placing BODY CELLS of the robot strategically in order to hit the right points - with your guidance, of course!"""
 """Draw the BODY CELLS using your purple cursor and press SPACE to start the simulation.""",
+"""Press "R" to RESTART at any time. Try to beat your HIGHSCORE!""",
 """Good luck, Human."""]
 
 onColor = (5, 255, 5, 255)
@@ -100,6 +101,40 @@ for c in range(size):
             die.append(0)
     lifeGrid.append(die)
 
+#some start presets
+
+
+for i in range(90,100):
+    for j in range(90, 100):
+        lifeGrid[i][j] = -5
+        lifeGrid[89][j] = 10
+        lifeGrid[i][j-90] = 5
+        lifeGrid[i-5][15] = -1
+
+lifeGrid[97][28] = -10
+lifeGrid[15][26] = -3
+lifeGrid[15][27] = 3
+for i in range(50):
+    lifeGrid[i][99] = 5
+    lifeGrid[50][i] = 5
+    lifeGrid[45][i-10] = -1
+    
+for i in range(79, 100, 4):
+    lifeGrid[i][50] = -7
+    lifeGrid[i-1][50] = 10
+
+"""
+example placement
+lifeGrid[ 7 ][ 11 ] = 1
+lifeGrid[ 8 ][ 9 ] = 1
+lifeGrid[ 9 ][ 11 ] = 1
+"""
+lifeGrid[ 10 ][ 43 ] = 1
+lifeGrid[ 13 ][ 44 ] = 1
+lifeGrid[ 10 ][ 45 ] = 1
+lifeGrid[ 13 ][ 46 ] = 1
+
+
 def renderCurrentState():
     for i in range(size):
         for j in range(size):            
@@ -149,100 +184,6 @@ def getNextStep(lifeGrid, points):
     renderCurrentState()
     return points
 
-#some start presets
-if start == "glider":
-    lifeGrid[2][2] = 1
-    lifeGrid[3][3] = 1
-    lifeGrid[3][4] = 1
-    lifeGrid[2][4] = 1
-    lifeGrid[1][4] = 1
-
-elif start == "inkspot":
-    lifeGrid[12][2] = 1
-    lifeGrid[12][3] = 1
-    lifeGrid[12][4] = 1
-    lifeGrid[11][7] = 1
-    lifeGrid[10][47] = 1
-
-elif start == "r":
-    f = int(size/2)
-    lifeGrid[f+2][f+2] = 1
-    lifeGrid[f+3][f+2] = 1
-    lifeGrid[f+2][f+3] = 1
-    lifeGrid[f+1][f+3] = 1
-    lifeGrid[f+2][f+4] = 1
-elif start == "glider gun":
-    #is there a more convenient way to do this? probably.
-    lifeGrid[ 5 ][ 29 ] = 1
-    lifeGrid[ 6 ][ 27 ] = 1
-    lifeGrid[ 6 ][ 29 ] = 1
-    lifeGrid[ 7 ][ 17 ] = 1
-    lifeGrid[ 7 ][ 18 ] = 1
-    lifeGrid[ 7 ][ 25 ] = 1
-    lifeGrid[ 7 ][ 26 ] = 1
-    lifeGrid[ 7 ][ 39 ] = 1
-    lifeGrid[ 7 ][ 40 ] = 1
-    lifeGrid[ 8 ][ 16 ] = 1
-    lifeGrid[ 8 ][ 20 ] = 1
-    lifeGrid[ 8 ][ 25 ] = 1
-    lifeGrid[ 8 ][ 26 ] = 1
-    lifeGrid[ 8 ][ 39 ] = 1
-    lifeGrid[ 8 ][ 40 ] = 1
-    lifeGrid[ 9 ][ 5 ] = 1
-    lifeGrid[ 9 ][ 6 ] = 1
-    lifeGrid[ 9 ][ 15 ] = 1
-    lifeGrid[ 9 ][ 21 ] = 1
-    lifeGrid[ 9 ][ 25 ] = 1
-    lifeGrid[ 9 ][ 26 ] = 1
-    lifeGrid[ 10 ][ 5 ] = 1
-    lifeGrid[ 10 ][ 6 ] = 1
-    lifeGrid[ 10 ][ 15 ] = 1
-    lifeGrid[ 10 ][ 19 ] = 1
-    lifeGrid[ 10 ][ 21 ] = 1
-    lifeGrid[ 10 ][ 22 ] = 1
-    lifeGrid[ 10 ][ 27 ] = 1
-    lifeGrid[ 10 ][ 29 ] = 1
-    lifeGrid[ 11 ][ 15 ] = 1
-    lifeGrid[ 11 ][ 21 ] = 1
-    lifeGrid[ 11 ][ 29 ] = 1
-    lifeGrid[ 12 ][ 16 ] = 1
-    lifeGrid[ 12 ][ 20 ] = 1
-    lifeGrid[ 13 ][ 17 ] = 1
-    lifeGrid[ 13 ][ 18 ] = 1
-
-elif start == "game":
-    for i in range(90,100):
-        for j in range(90, 100):
-            lifeGrid[i][j] = -5
-            lifeGrid[89][j] = 10
-            lifeGrid[i][j-90] = 5
-            lifeGrid[i-5][15] = -1
-
-    lifeGrid[97][28] = -10
-    lifeGrid[15][26] = -3
-    lifeGrid[15][27] = 3
-    for i in range(50):
-        lifeGrid[i][99] = 5
-        lifeGrid[50][i] = 5
-        lifeGrid[45][i-10] = -1
-        
-    for i in range(79, 100, 4):
-        lifeGrid[i][50] = -7
-        lifeGrid[i-1][50] = 10
-    
-    """
-    example placement
-    lifeGrid[ 7 ][ 11 ] = 1
-    lifeGrid[ 8 ][ 9 ] = 1
-    lifeGrid[ 9 ][ 11 ] = 1
-    """
-    lifeGrid[ 10 ][ 43 ] = 1
-    lifeGrid[ 13 ][ 44 ] = 1
-    lifeGrid[ 10 ][ 45 ] = 1
-    lifeGrid[ 13 ][ 46 ] = 1
-
-
-
 while running:
 
     pygame.mouse.set_visible(False)
@@ -259,6 +200,119 @@ while running:
             active = True
             started = True
             #you can draw until you start the simulation.
+        if event.type == pygame.KEYDOWN:
+            if (pygame.key.name(event.key)) == "r":
+            # INIT CODE ABOVE1!!!!!!
+
+                size = 100
+                speed = 1
+                #type "random" to randomize
+                start = "game"
+                chance = 19
+                mouseClicked = False
+                totalPoints = 0
+                active = False
+                started = False
+                points = 0
+                DESTROYED = -5000
+                drawArea = 4
+
+                onColor = (5, 255, 5, 255)
+                offColor = (5, 5, 5, 255)
+                goodColor = (5, 5, 255, 255)
+                badColor = (255, 5, 5, 255)
+
+                #what is a neighbor?
+                directions8 = [(0, 1), (1, 0), (0, -1), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]
+                directions4 = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+                directions6 = [(0, 1), (1, 0), (0, -1), (-1, 0), (1, -1), (-1, 1)]
+                directions4r2 = [(0, 1), (1, 0), (0, -1), (-1, 0), (0, 2), (2, 0), (0, -2), (-2, 0)]
+                directionsUp = [(0, 1), (1, 1), (-1, 1),(0, -1)]
+
+                #interesting rulesets
+                life = [[3], [2, 3]]
+                highLife = [[3, 6], [2, 3]]
+                dayNight = [[3, 6, 7, 8], [3, 4, 6, 7, 8]]
+                seeds = [[2],[]]
+
+                #this one has a lot of game potential but idk if there is time to implement it
+                inkspot = [[3],[0,1,2,3,4,5,6,7,8]]
+
+                blinkers = [[3,4,5],[2]]
+                coral = [[3],[4,5,6,7,8]]
+                twoByTwo = [[3,6],[1,2,5]]
+
+
+                #rules for cellular automata
+                rules = inkspot
+                #rules.append(directions8)
+
+
+                #directions8 is the default neighborhood
+                try:
+                    rules[2]
+                except IndexError:
+                    rules.append(directions8)
+
+
+
+
+                #initialize stuff
+                pygame.init()
+                pygame.display.set_caption("Sporesdale Bioraiders")
+                windowSize = 600
+                boxSize = int(windowSize/(size-1))
+                screen = pygame.display.set_mode((windowSize, windowSize))
+                clock = pygame.time.Clock()
+                running = True
+                lifeGrid = []
+
+                #create the grid
+                lifeGrid = []
+                for c in range(size):
+                    die = []
+                    for d in range(size):
+                        if start == "random":
+                            something = int(random.randint(0, chance)/10)
+                            die.append(something)
+                        else:
+                            die.append(0)
+                    lifeGrid.append(die)
+
+                #some start presets
+
+
+                for i in range(90,100):
+                    for j in range(90, 100):
+                        lifeGrid[i][j] = -5
+                        lifeGrid[89][j] = 10
+                        lifeGrid[i][j-90] = 5
+                        lifeGrid[i-5][15] = -1
+
+                lifeGrid[97][28] = -10
+                lifeGrid[15][26] = -3
+                lifeGrid[15][27] = 3
+                for i in range(50):
+                    lifeGrid[i][99] = 5
+                    lifeGrid[50][i] = 5
+                    lifeGrid[45][i-10] = -1
+                    
+                for i in range(79, 100, 4):
+                    lifeGrid[i][50] = -7
+                    lifeGrid[i-1][50] = 10
+
+                """
+                example placement
+                lifeGrid[ 7 ][ 11 ] = 1
+                lifeGrid[ 8 ][ 9 ] = 1
+                lifeGrid[ 9 ][ 11 ] = 1
+                """
+                lifeGrid[ 10 ][ 43 ] = 1
+                lifeGrid[ 13 ][ 44 ] = 1
+                lifeGrid[ 10 ][ 45 ] = 1
+                lifeGrid[ 13 ][ 46 ] = 1
+
+            ## END INIT CODE
         elif event.type == pygame.KEYUP:
             if not started:
                 active = False
