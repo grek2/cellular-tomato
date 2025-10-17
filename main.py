@@ -3,11 +3,19 @@ import random
 
 size = 100
 speed = 1
-#type "random" to randomize, more 
-start = "glider gun"
+#type "random" to randomize
+start = "game"
 chance = 19
 mouseClicked = False
 active = False
+started = False
+points = 0
+DESTROYED = -5000
+
+onColor = (5, 255, 5, 255)
+offColor = (5, 5, 5, 255)
+goodColor = (5, 5, 255, 255)
+badColor = (255, 5, 5, 255)
 
 #what is a neighbor?
 directions8 = [(0, 1), (1, 0), (0, -1), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]
@@ -31,7 +39,7 @@ twoByTwo = [[3,6],[1,2,5]]
 
 
 #rules for cellular automata
-rules = life
+rules = inkspot
 #rules.append(directions8)
 
 
@@ -43,7 +51,7 @@ except IndexError:
 
 #initialize stuff
 pygame.init()
-pygame.display.set_caption("Cellular Tomato :)")
+pygame.display.set_caption("Sporesdale Bioraiders")
 windowSize = 600
 boxSize = int(windowSize/(size-1))
 screen = pygame.display.set_mode((windowSize, windowSize))
@@ -70,10 +78,18 @@ def renderCurrentState():
 
             elif lifeGrid[i][j] == "dying":
                 lifeGrid[i][j] = 0
-            pygame.draw.rect(screen, pygame.Color(5, 255*int(lifeGrid[i][j]), 5, 255), ((i)*boxSize, (j)*boxSize, boxSize, boxSize), border_radius=0)            
-      
 
-def getNextStep(lifeGrid):
+            if lifeGrid[i][j] == 1:
+                pygame.draw.rect(screen, pygame.Color(onColor), ((i)*boxSize, (j)*boxSize, boxSize, boxSize), border_radius=0)            
+            elif lifeGrid[i][j] == 0:
+                pygame.draw.rect(screen, pygame.Color(offColor), ((i)*boxSize, (j)*boxSize, boxSize, boxSize), border_radius=0)            
+            elif lifeGrid[i][j] < 0:
+                pygame.draw.rect(screen, pygame.Color(badColor), ((i)*boxSize, (j)*boxSize, boxSize, boxSize), border_radius=0)            
+            elif lifeGrid[i][j] > 1:
+                pygame.draw.rect(screen, pygame.Color(goodColor), ((i)*boxSize, (j)*boxSize, boxSize, boxSize), border_radius=0)            
+            
+
+def getNextStep(lifeGrid, points):
     a, b = size, size
 
     for i in range(a):
@@ -83,16 +99,22 @@ def getNextStep(lifeGrid):
             for dirX, dirY in rules[2]:
                 (x, y) = (i + dirX, j + dirY)
 
-                #if 0 <= x < a and 0 <= y < b and (lifeGrid[x][y] == 1 or lifeGrid[x][y] == "dying"):
-
+                if 0 <= x < a and 0 <= y < b and (lifeGrid[x][y] == 1 or lifeGrid[x][y] == "dying"):
                     liveNbrs += 1
-
-
+       
             if lifeGrid[i][j] == 0 and liveNbrs in rules[0]:
                 lifeGrid[i][j] = "growing"
 
             elif (lifeGrid[i][j] == 1) and not(liveNbrs in rules[1]):
-                lifeGrid[i][j] = "dying"                
+                lifeGrid[i][j] = "dying"
+
+            elif (lifeGrid[i][j] < 0 or lifeGrid[i][j] > 1) and liveNbrs in rules[0] and lifeGrid[i][j] > -3000:
+                print(lifeGrid[i][j])               
+                points += int(lifeGrid[i][j])
+                if lifeGrid[i][j] == -1:
+                    lifeGrid[i][j] = DESTROYED    
+                else:
+                    lifeGrid[i][j] = "growing"               
             
     renderCurrentState()
 
@@ -157,6 +179,20 @@ elif start == "glider gun":
     lifeGrid[ 13 ][ 17 ] = 1
     lifeGrid[ 13 ][ 18 ] = 1
 
+elif start == "game":
+    for i in range(90,100):
+        for j in range(90, 100):
+            lifeGrid[i][j] = -5
+            lifeGrid[89][j] = 10
+    lifeGrid[97][28] = -5
+    lifeGrid[15][26] = -3
+    for i in range(50):
+        lifeGrid[i][99] = 5
+        lifeGrid[50][i] = 5
+        lifeGrid[45][i-20] = -1
+
+
+
 while running:
 
     pygame.mouse.set_visible(False)
@@ -171,22 +207,24 @@ while running:
             mouseClicked = False
         if event.type == pygame.KEYDOWN:
             active = True
-            #simulation runs when a key is being pressed.
+            started = True
+            #you can draw until you start the simulation.
         elif event.type == pygame.KEYUP:
-            active = False
+            if not started:
+                active = False
 
     renderCurrentState()
     
     #draw mouse
-    pygame.draw.rect(screen, pygame.Color(255, 100, 255, 255), (int((mouseX/boxSize))*boxSize, int((mouseY/boxSize))*boxSize, boxSize, boxSize), border_radius=0)
+    pygame.draw.rect(screen, pygame.Color(255, 100, 255, 255), (int((mouseX/boxSize))*boxSize/4, int((mouseY/boxSize))*boxSize/4, boxSize, boxSize), border_radius=0)
     if mouseClicked and not active:
         try:
-            lifeGrid[int((mouseX/boxSize))][int((mouseY/boxSize))] = 1
+            lifeGrid[int((mouseX/boxSize/4))][int((mouseY/boxSize/4))] = 1
         except IndexError:
             "Pretty please don't give an index error, thanks" #this needs to be here or python will yell at you.
             
     if active:
-        getNextStep(lifeGrid)
+        getNextStep(lifeGrid, points)
     
     pygame.display.flip()
 
@@ -195,6 +233,7 @@ while running:
     clock.tick(60)
 
 pygame.quit()
+#print("Points:", points)
 
 
 
