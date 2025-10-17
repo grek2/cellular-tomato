@@ -11,6 +11,7 @@ active = False
 started = False
 points = 0
 DESTROYED = -5000
+drawArea = 4
 
 onColor = (5, 255, 5, 255)
 offColor = (5, 5, 5, 255)
@@ -109,7 +110,7 @@ def getNextStep(lifeGrid, points):
                 lifeGrid[i][j] = "dying"
 
             elif (lifeGrid[i][j] < 0 or lifeGrid[i][j] > 1) and liveNbrs in rules[0] and lifeGrid[i][j] > -3000:
-                print(lifeGrid[i][j])               
+                print(lifeGrid[i][j], "points")               
                 points += int(lifeGrid[i][j])
                 if lifeGrid[i][j] == -1:
                     lifeGrid[i][j] = DESTROYED    
@@ -184,12 +185,31 @@ elif start == "game":
         for j in range(90, 100):
             lifeGrid[i][j] = -5
             lifeGrid[89][j] = 10
-    lifeGrid[97][28] = -5
+            lifeGrid[i][j-90] = 5
+            lifeGrid[i-5][15] = -1
+
+    lifeGrid[97][28] = -10
     lifeGrid[15][26] = -3
+    lifeGrid[15][27] = 3
     for i in range(50):
         lifeGrid[i][99] = 5
         lifeGrid[50][i] = 5
-        lifeGrid[45][i-20] = -1
+        lifeGrid[45][i-10] = -1
+        
+    for i in range(79, 100, 4):
+        lifeGrid[i][50] = -7
+        lifeGrid[i-1][50] = 10
+    
+    """
+    example placement
+    lifeGrid[ 7 ][ 11 ] = 1
+    lifeGrid[ 8 ][ 9 ] = 1
+    lifeGrid[ 9 ][ 11 ] = 1
+    """
+    lifeGrid[ 10 ][ 43 ] = 1
+    lifeGrid[ 13 ][ 44 ] = 1
+    lifeGrid[ 10 ][ 45 ] = 1
+    lifeGrid[ 13 ][ 46 ] = 1
 
 
 
@@ -216,10 +236,10 @@ while running:
     renderCurrentState()
     
     #draw mouse
-    pygame.draw.rect(screen, pygame.Color(255, 100, 255, 255), (int((mouseX/boxSize))*boxSize/4, int((mouseY/boxSize))*boxSize/4, boxSize, boxSize), border_radius=0)
+    pygame.draw.rect(screen, pygame.Color(255, 100, 255, 255), (int((mouseX/boxSize))*boxSize/drawArea, int((mouseY/boxSize))*boxSize/drawArea, boxSize, boxSize), border_radius=0)
     if mouseClicked and not active:
         try:
-            lifeGrid[int((mouseX/boxSize/4))][int((mouseY/boxSize/4))] = 1
+            lifeGrid[int((mouseX/boxSize/drawArea))][int((mouseY/boxSize/drawArea))] = 1
         except IndexError:
             "Pretty please don't give an index error, thanks" #this needs to be here or python will yell at you.
             
