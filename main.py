@@ -12,6 +12,29 @@ started = False
 points = 0
 DESTROYED = -5000
 drawArea = 4
+story = [
+"""(Press ENTER to advance to next line of text)""",
+"""Many, many universes away, in a place just like this one...""",
+"""In a world in which the Cambrian Explosion never happened, sentient fungal lifeforms rule the earth.""",
+"""No matter how different life is, sometimes things, in all universes, always stay the same.""",
+"""They dance, love, cry, make art...""",
+"""...and, of course...""",
+"""build BADASS ROBOTS!!!""",
+"""Their "Growbots" are very similar to the robots of Earth, except they're made entirely of living fungal matter.""",
+"""...aaaaand there's also no upper bound on their size. And they're immortal. And they're horrible amalgamations of hundreds of writhing fungal components that don't move, just endlessly spread.""",
+"""Basically just pretty much like human robots.""",
+"""The Sporsdale Bio Raiders - one of the top Growbotics teams in New Fungus State, rivaled only by the New Rotchelle Mushroom Mechanics, are preparing for this year's LASTTech competition!""",
+"""Unfortunately, they've got no bioprogrammers this year, and their Growbot doesn't know what to do!""",
+"""So, they did what any engineering team members would do: instead of even attempting to learn how to code, they opened a portal to an alternate dimension - and they've asked YOU to help.""",
+"""The Sporesdale Bio Raiders worked very very hard on their creeping horror, but we're probably going to get disqualified if we attempt to show it.""",
+"""So we've helpfully abstracted the playing field down to a 100x100 grid of PIXELS!""",
+"""GREEN PIXELS represent the body "cells" of the Growbot. The complex mycelial transfer mechanisms and energy flow dynamics that go into moving the Creeping Horror are a bit beyond the scope of this tutorial, but essentially, *if a cell has exactly three GREEN neighbors, it will turn GREEN. GREEN CELLS cannot die.""",
+"""BLUE PIXELS represent the SCORING ZONES. When a cell that formerly housed a BLUE PIXEL turns GREEN, the Bio Raiders are awarded some number of POINTS (usually ranging from one to ten). Crucially, *different SCORING ZONES reward different amounts of POINTS*. In a radical move this year, LASTTech decided to *conceal the amount of POINTS each SCORING ZONE rewards to the player.* Part of the puzzle of this game - and of the Bio Raiders' challenge - is to figure that out mid-competition.""",
+"""RED PIXELS represent the PENALTY ZONES. These work much the same as the SCORING ZONES, except they *subtract some number of POINTS from 1-10* rather than adding then. Again, *different groups of penalty zones subtract different amounts of POINTS*!""",
+"""The Bio Raiders' ultimate goal is to earn as many POINTS as possible by covering the BLUE ZONES with GREEN PIXELS and avoiding GREEN PIXELS in the RED ZONES at all costs.""",
+"""They'll achieve this by placing BODY CELLS of the robot strategically in order to hit the right points - with your guidance, of course!"""
+"""Draw the BODY CELLS using your purple cursor and press SPACE to start the simulation.""",
+"""Good luck, Human."""]
 
 onColor = (5, 255, 5, 255)
 offColor = (5, 5, 5, 255)
@@ -49,6 +72,10 @@ try:
     rules[2]
 except IndexError:
     rules.append(directions8)
+
+for c in story:
+    uselessvar = input(c)
+
 
 #initialize stuff
 pygame.init()
