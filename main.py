@@ -2,6 +2,7 @@ import pygame
 import random
 import time
 
+highscore = 0
 size = 100
 speed = 1
 #type "random" to randomize
@@ -203,14 +204,15 @@ while running:
         if event.type == pygame.KEYDOWN:
             if (pygame.key.name(event.key)) == "r":
             # INIT CODE ABOVE1!!!!!!
-
+                if totalPoints > highscore:
+                    highscore = totalPoints
                 size = 100
                 speed = 1
                 #type "random" to randomize
                 start = "game"
                 chance = 19
                 mouseClicked = False
-                totalPoints = 0
+
                 active = False
                 started = False
                 points = 0
@@ -313,6 +315,8 @@ while running:
                 lifeGrid[ 13 ][ 46 ] = 1
 
             ## END INIT CODE
+
+                print("===============================\n"+"==    HIGHSCORE: " + str(highscore) + "        ==\n"+"===============================")
         elif event.type == pygame.KEYUP:
             if not started:
                 active = False
