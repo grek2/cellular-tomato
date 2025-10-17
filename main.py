@@ -3,7 +3,7 @@ import random
 
 size = 100
 speed = 1
-#type "random" to randomize
+#type "random" to randomize, more 
 start = "glider gun"
 chance = 19
 mouseClicked = False
@@ -21,8 +21,10 @@ life = [[3], [2, 3]]
 highLife = [[3, 6], [2, 3]]
 dayNight = [[3, 6, 7, 8], [3, 4, 6, 7, 8]]
 seeds = [[2],[]]
-#this one has a lot of potential i think
+
+#this one has a lot of game potential but idk if there is time to implement it
 inkspot = [[3],[0,1,2,3,4,5,6,7,8]]
+
 blinkers = [[3,4,5],[2]]
 coral = [[3],[4,5,6,7,8]]
 twoByTwo = [[3,6],[1,2,5]]
@@ -32,11 +34,14 @@ twoByTwo = [[3,6],[1,2,5]]
 rules = life
 #rules.append(directions8)
 
+
+#directions8 is the default neighborhood
 try:
     rules[2]
 except IndexError:
     rules.append(directions8)
 
+#initialize stuff
 pygame.init()
 pygame.display.set_caption("Cellular Tomato :)")
 windowSize = 600
@@ -44,8 +49,9 @@ boxSize = int(windowSize/(size-1))
 screen = pygame.display.set_mode((windowSize, windowSize))
 clock = pygame.time.Clock()
 running = True
-
 lifeGrid = []
+
+#create the grid
 for c in range(size):
     die = []
     for d in range(size):
@@ -77,7 +83,8 @@ def getNextStep(lifeGrid):
             for dirX, dirY in rules[2]:
                 (x, y) = (i + dirX, j + dirY)
 
-                if 0 <= x < a and 0 <= y < b and (lifeGrid[x][y] == 1 or lifeGrid[x][y] == "dying"):
+                #if 0 <= x < a and 0 <= y < b and (lifeGrid[x][y] == 1 or lifeGrid[x][y] == "dying"):
+
                     liveNbrs += 1
 
 
@@ -89,7 +96,7 @@ def getNextStep(lifeGrid):
             
     renderCurrentState()
 
-#glider :)
+#some start presets
 if start == "glider":
     lifeGrid[2][2] = 1
     lifeGrid[3][3] = 1
@@ -164,17 +171,20 @@ while running:
             mouseClicked = False
         if event.type == pygame.KEYDOWN:
             active = True
+            #simulation runs when a key is being pressed.
         elif event.type == pygame.KEYUP:
             active = False
 
     renderCurrentState()
     
     #draw mouse
-    #gives index error if you draw on the edge. fix that.
     pygame.draw.rect(screen, pygame.Color(255, 100, 255, 255), (int((mouseX/boxSize))*boxSize, int((mouseY/boxSize))*boxSize, boxSize, boxSize), border_radius=0)
     if mouseClicked and not active:
-        lifeGrid[int((mouseX/boxSize))][int((mouseY/boxSize))] = 1
-
+        try:
+            lifeGrid[int((mouseX/boxSize))][int((mouseY/boxSize))] = 1
+        except IndexError:
+            "Pretty please don't give an index error, thanks" #this needs to be here or python will yell at you.
+            
     if active:
         getNextStep(lifeGrid)
     
