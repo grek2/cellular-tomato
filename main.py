@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 
 size = 100
 speed = 1
@@ -7,6 +8,7 @@ speed = 1
 start = "game"
 chance = 19
 mouseClicked = False
+totalPoints = 0
 active = False
 started = False
 points = 0
@@ -145,6 +147,7 @@ def getNextStep(lifeGrid, points):
                     lifeGrid[i][j] = "growing"               
             
     renderCurrentState()
+    return points
 
 #some start presets
 if start == "glider":
@@ -271,11 +274,12 @@ while running:
             "Pretty please don't give an index error, thanks" #this needs to be here or python will yell at you.
             
     if active:
-        getNextStep(lifeGrid, points)
+        pygame.time.delay(speed)
+        totalPoints += getNextStep(lifeGrid, points)
+        print("Total Points: " + str(totalPoints))
     
     pygame.display.flip()
 
-    pygame.time.delay(speed)
 
     clock.tick(60)
 
