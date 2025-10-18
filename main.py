@@ -35,8 +35,8 @@ story = [
 """BLUE PIXELS represent the SCORING ZONES. When a cell that formerly housed a BLUE PIXEL turns GREEN, the Bio Raiders are awarded some number of POINTS (usually ranging from one to ten). Crucially, *different SCORING ZONES reward different amounts of POINTS*. In a radical move this year, LASTTech decided to *conceal the amount of POINTS each SCORING ZONE rewards to the player.* Part of the puzzle of this game - and of the Bio Raiders' challenge - is to figure that out mid-competition.""",
 """RED PIXELS represent the PENALTY ZONES. These work much the same as the SCORING ZONES, except they *subtract some number of POINTS from 1-10* rather than adding then. Again, *different groups of penalty zones subtract different amounts of POINTS*!""",
 """The Bio Raiders' ultimate goal is to earn as many POINTS as possible by covering the BLUE ZONES with GREEN PIXELS and avoiding GREEN PIXELS in the RED ZONES at all costs.""",
-"""They'll achieve this by placing BODY CELLS of the robot strategically in order to hit the right points - with your guidance, of course!"""
-"""Draw the BODY CELLS using your purple cursor and press SPACE to start the simulation.""",
+"""They'll achieve this by strategically placing BODY CELLS in the gray starting area to guide the robot to the scoring zones."""
+""" Draw the BODY CELLS using your purple cursor and press SPACE to start the simulation.""",
 """Press "R" to RESTART at any time. Try to beat your HIGHSCORE!""",
 """Good luck, Human."""]
 
@@ -44,6 +44,7 @@ onColor = (5, 255, 5, 255)
 offColor = (5, 5, 5, 255)
 goodColor = (5, 5, 255, 255)
 badColor = (255, 5, 5, 255)
+drawAreaColor = (50, 50, 75, 255)
 
 #what is a neighbor?
 directions8 = [(0, 1), (1, 0), (0, -1), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]
@@ -139,7 +140,7 @@ lifeGrid[ 13 ][ 46 ] = 1
 
 def renderCurrentState():
     for i in range(size):
-        for j in range(size):            
+        for j in range(size):
             if lifeGrid[i][j] == "growing":
                 lifeGrid[i][j] = 1
 
@@ -150,6 +151,8 @@ def renderCurrentState():
                 pygame.draw.rect(screen, pygame.Color(onColor), ((i)*boxSize, (j)*boxSize, boxSize, boxSize), border_radius=0)            
             elif lifeGrid[i][j] == 0:
                 pygame.draw.rect(screen, pygame.Color(offColor), ((i)*boxSize, (j)*boxSize, boxSize, boxSize), border_radius=0)            
+                if i < 25 and j < 25:
+                    pygame.draw.rect(screen, pygame.Color(drawAreaColor), ((i)*boxSize, (j)*boxSize, boxSize, boxSize), border_radius=0)
             elif lifeGrid[i][j] < 0:
                 pygame.draw.rect(screen, pygame.Color(badColor), ((i)*boxSize, (j)*boxSize, boxSize, boxSize), border_radius=0)            
             elif lifeGrid[i][j] > 1:
