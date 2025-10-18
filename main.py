@@ -60,6 +60,7 @@ seeds = [[2],[]]
 
 #this one has a lot of game potential but idk if there is time to implement it
 inkspot = [[3],[0,1,2,3,4,5,6,7,8]]
+#turns out we just barely had enough time to implement it.
 
 blinkers = [[3,4,5],[2]]
 coral = [[3],[4,5,6,7,8]]
@@ -216,6 +217,7 @@ while running:
                 active = False
                 started = False
                 points = 0
+                totalPoints = 0
                 DESTROYED = -5000
                 drawArea = 4
 
@@ -243,21 +245,13 @@ while running:
                 blinkers = [[3,4,5],[2]]
                 coral = [[3],[4,5,6,7,8]]
                 twoByTwo = [[3,6],[1,2,5]]
-
-
-                #rules for cellular automata
+               
                 rules = inkspot
-                #rules.append(directions8)
-
-
-                #directions8 is the default neighborhood
+                
                 try:
                     rules[2]
                 except IndexError:
                     rules.append(directions8)
-
-
-
 
                 #initialize stuff
                 pygame.init()
@@ -267,9 +261,8 @@ while running:
                 screen = pygame.display.set_mode((windowSize, windowSize))
                 clock = pygame.time.Clock()
                 running = True
-                lifeGrid = []
 
-                #create the grid
+                #clear the grid
                 lifeGrid = []
                 for c in range(size):
                     die = []
@@ -281,9 +274,7 @@ while running:
                             die.append(0)
                     lifeGrid.append(die)
 
-                #some start presets
-
-
+                #add zones
                 for i in range(90,100):
                     for j in range(90, 100):
                         lifeGrid[i][j] = -5
@@ -338,11 +329,9 @@ while running:
     
     pygame.display.flip()
 
-
     clock.tick(60)
 
 pygame.quit()
-#print("Points:", points)
 
 
 
