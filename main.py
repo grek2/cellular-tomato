@@ -45,6 +45,7 @@ offColor = (5, 5, 5, 255)
 goodColor = (5, 5, 255, 255)
 badColor = (255, 5, 5, 255)
 drawAreaColor = (50, 50, 75, 255)
+wallColor = (255, 50, 50, 255)
 
 #what is a neighbor?
 directions8 = [(0, 1), (1, 0), (0, -1), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]
@@ -67,11 +68,8 @@ blinkers = [[3,4,5],[2]]
 coral = [[3],[4,5,6,7,8]]
 twoByTwo = [[3,6],[1,2,5]]
 
-
 #rules for cellular automata
 rules = inkspot
-#rules.append(directions8)
-
 
 #directions8 is the default neighborhood
 try:
@@ -82,7 +80,7 @@ except IndexError:
 for c in story:
     uselessvar = input(c)
 
-
+    
 #initialize stuff
 pygame.init()
 pygame.display.set_caption("Sporesdale Bioraiders")
@@ -93,7 +91,7 @@ clock = pygame.time.Clock()
 running = True
 lifeGrid = []
 
-#create the grid
+#clear the grid
 for c in range(size):
     die = []
     for d in range(size):
@@ -104,38 +102,36 @@ for c in range(size):
             die.append(0)
     lifeGrid.append(die)
 
-#some start presets
+if start == "game":
+    for i in range(90,100):
+        for j in range(90, 100):
+            lifeGrid[i][j] = -5
+            lifeGrid[89][j] = 10
+            lifeGrid[i][j-90] = 5
+            lifeGrid[i-5][15] = -1
 
+    lifeGrid[97][28] = -10
+    lifeGrid[15][26] = -3
+    lifeGrid[15][27] = 3
+    for i in range(50):
+        lifeGrid[i][99] = 5
+        lifeGrid[50][i] = 5
+        lifeGrid[45][i-10] = -1
+        
+    for i in range(79, 100, 4):
+        lifeGrid[i][50] = -7
+        lifeGrid[i-1][50] = 10
 
-for i in range(90,100):
-    for j in range(90, 100):
-        lifeGrid[i][j] = -5
-        lifeGrid[89][j] = 10
-        lifeGrid[i][j-90] = 5
-        lifeGrid[i-5][15] = -1
-
-lifeGrid[97][28] = -10
-lifeGrid[15][26] = -3
-lifeGrid[15][27] = 3
-for i in range(50):
-    lifeGrid[i][99] = 5
-    lifeGrid[50][i] = 5
-    lifeGrid[45][i-10] = -1
-    
-for i in range(79, 100, 4):
-    lifeGrid[i][50] = -7
-    lifeGrid[i-1][50] = 10
-
-"""
-example placement
-lifeGrid[ 7 ][ 11 ] = 1
-lifeGrid[ 8 ][ 9 ] = 1
-lifeGrid[ 9 ][ 11 ] = 1
-"""
-lifeGrid[ 10 ][ 43 ] = 1
-lifeGrid[ 13 ][ 44 ] = 1
-lifeGrid[ 10 ][ 45 ] = 1
-lifeGrid[ 13 ][ 46 ] = 1
+    '''
+    example placement
+    lifeGrid[ 7 ][ 11 ] = 1
+    lifeGrid[ 8 ][ 9 ] = 1
+    lifeGrid[ 9 ][ 11 ] = 1
+    '''
+    lifeGrid[ 10 ][ 43 ] = 1
+    lifeGrid[ 13 ][ 44 ] = 1
+    lifeGrid[ 10 ][ 45 ] = 1
+    lifeGrid[ 13 ][ 46 ] = 1
 
 
 def renderCurrentState():
@@ -153,8 +149,10 @@ def renderCurrentState():
                 pygame.draw.rect(screen, pygame.Color(offColor), ((i)*boxSize, (j)*boxSize, boxSize, boxSize), border_radius=0)            
                 if i < 25 and j < 25:
                     pygame.draw.rect(screen, pygame.Color(drawAreaColor), ((i)*boxSize, (j)*boxSize, boxSize, boxSize), border_radius=0)
-            elif lifeGrid[i][j] < 0:
+            elif lifeGrid[i][j] < 0 and lifeGrid[i][j] < 0:# != -1:
                 pygame.draw.rect(screen, pygame.Color(badColor), ((i)*boxSize, (j)*boxSize, boxSize, boxSize), border_radius=0)            
+            #elif lifeGrid[i][j] == -1 or lifeGrid[i][j] == DESTROYED:
+                #pygame.draw.rect(screen, pygame.Color(wallColor), ((i)*boxSize, (j)*boxSize, boxSize, boxSize), border_radius=0)            
             elif lifeGrid[i][j] > 1:
                 pygame.draw.rect(screen, pygame.Color(goodColor), ((i)*boxSize, (j)*boxSize, boxSize, boxSize), border_radius=0)            
             
@@ -182,10 +180,10 @@ def getNextStep(lifeGrid, points):
                 print(lifeGrid[i][j], "points")               
                 points += int(lifeGrid[i][j])
                 if lifeGrid[i][j] == -1:
-                    lifeGrid[i][j] = DESTROYED    
+                    lifeGrid[i][j] = DESTROYED 
                 else:
-                    lifeGrid[i][j] = "growing"               
-            
+                    lifeGrid[i][j] = "growing"
+
     renderCurrentState()
     return points
 
@@ -278,35 +276,36 @@ while running:
                     lifeGrid.append(die)
 
                 #add zones
-                for i in range(90,100):
-                    for j in range(90, 100):
-                        lifeGrid[i][j] = -5
-                        lifeGrid[89][j] = 10
-                        lifeGrid[i][j-90] = 5
-                        lifeGrid[i-5][15] = -1
+                if start == "game":
+                    for i in range(90,100):
+                        for j in range(90, 100):
+                            lifeGrid[i][j] = -5
+                            lifeGrid[89][j] = 10
+                            lifeGrid[i][j-90] = 5
+                            lifeGrid[i-5][15] = -1
 
-                lifeGrid[97][28] = -10
-                lifeGrid[15][26] = -3
-                lifeGrid[15][27] = 3
-                for i in range(50):
-                    lifeGrid[i][99] = 5
-                    lifeGrid[50][i] = 5
-                    lifeGrid[45][i-10] = -1
-                    
-                for i in range(79, 100, 4):
-                    lifeGrid[i][50] = -7
-                    lifeGrid[i-1][50] = 10
+                    lifeGrid[97][28] = -10
+                    lifeGrid[15][26] = -3
+                    lifeGrid[15][27] = 3
+                    for i in range(50):
+                        lifeGrid[i][99] = 5
+                        lifeGrid[50][i] = 5
+                        lifeGrid[45][i-10] = -1
+                        
+                    for i in range(79, 100, 4):
+                        lifeGrid[i][50] = -7
+                        lifeGrid[i-1][50] = 10
 
-                """
-                example placement
-                lifeGrid[ 7 ][ 11 ] = 1
-                lifeGrid[ 8 ][ 9 ] = 1
-                lifeGrid[ 9 ][ 11 ] = 1
-                """
-                lifeGrid[ 10 ][ 43 ] = 1
-                lifeGrid[ 13 ][ 44 ] = 1
-                lifeGrid[ 10 ][ 45 ] = 1
-                lifeGrid[ 13 ][ 46 ] = 1
+                    """
+                    example placement
+                    lifeGrid[ 7 ][ 11 ] = 1
+                    lifeGrid[ 8 ][ 9 ] = 1
+                    lifeGrid[ 9 ][ 11 ] = 1
+                    """
+                    lifeGrid[ 10 ][ 43 ] = 1
+                    lifeGrid[ 13 ][ 44 ] = 1
+                    lifeGrid[ 10 ][ 45 ] = 1
+                    lifeGrid[ 13 ][ 46 ] = 1
 
             ## END INIT CODE
 
@@ -335,15 +334,3 @@ while running:
     clock.tick(60)
 
 pygame.quit()
-
-
-
-
-
-
-
-
-
-
-            
-    
